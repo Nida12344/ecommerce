@@ -1,13 +1,34 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getCartTotal,
-  removeItem,
-  updateQuantity,
-} from "../../stores/cartSlice";
+import { getCartTotal, removeItem, updateQuantity } from "../../stores/cartSlice";
 import { Link } from "react-router-dom";
+import {
+  Box,
+  Typography,
+  Button,
+  Grid,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  IconButton,
+  CardMedia,
+} from "@mui/material";
+import RemoveIcon from "@mui/icons-material/Remove";
+import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export default function Cart() {
+  const dispatch = useDispatch();
+  const { data: cartProducts, totalAmount, deliverCharge } = useSelector((state) => state.cart);
+
+  useEffect(() => {
+    dispatch(getCartTotal());
+  }, [dispatch]);
+
   const increaseQty = (cartProductId, currentQty) => {
     const newQty = currentQty + 1;
     dispatch(updateQuantity({ id: cartProductId, quantity: newQty }));
@@ -18,157 +39,116 @@ export default function Cart() {
     dispatch(updateQuantity({ id: cartProductId, quantity: newQty }));
   };
 
-  const dispatch = useDispatch();
-  const {
-    data: cartProducts,
-    totalAmount,
-    deliverCharge,
-  } = useSelector((state) => state.cart);
-
-  useEffect(() => {
-    dispatch(getCartTotal());
-  }, [useSelector((state) => state.cart)]);
-
   const handleRemoveItem = (itemId) => {
     dispatch(removeItem({ id: itemId }));
   };
 
-  const emptyCartMsg = (
-    <h4 className="container text-center p-4">Your Cart is Empty</h4>
-  );
-
   return (
     <>
-      <div className="container-fluid page-header py-5">
-        <h1 className="text-center text-white display-6">Cart</h1>
-        <ol className="breadcrumb justify-content-center mb-0">
-          <Link sat to="/" className="breadcrumb-item">
-            <a href="#">Home</a>
-          </Link>
-          <li className="breadcrumb-item active text-white">Cart</li>
-        </ol>
-      </div>
+      <Box sx={{ py:3, backgroundColor: 'primary.main', color: 'white' }}>
+        <Typography variant="h3" textAlign="center" gutterBottom>
+          Cart
+        </Typography>
+        <Box sx={{ textAlign: 'center' }}>
+          <Typography variant="h6">
+            <Link to="/" style={{ color: 'white', textDecoration: 'none' }}>
+              Home
+            </Link>{" "}
+            / Cart
+          </Typography>
+        </Box>
+      </Box>
       {cartProducts.length === 0 ? (
-        emptyCartMsg
+        <Typography variant="h4" textAlign="center" sx={{ py: 5 }}>
+          Your Cart is Empty
+        </Typography>
       ) : (
-        <div className="container-fluid py-5">
-          <div className="container py-5">
-            <div className="table-responsive">
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th scope="col">Products</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Quantity</th>
-                    <th scope="col">Total</th>
-                    <th scope="col">Handle</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {cartProducts.map((cartProduct) => (
-                    <tr key={cartProduct.id}>
-                      <th scope="row">
-                        <div className="d-flex align-items-center">
-                          <img
-                            src={cartProduct.product_img}
-                            alt={cartProduct.product_img}
-                            style={{ width: 100 }}
+        <Box sx={{ py: 5 }}>
+          <Grid container spacing={4}>
+            <Grid item xs={12} md={8}>
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Product</TableCell>
+                      <TableCell>Name</TableCell>
+                      <TableCell>Price</TableCell>
+                      <TableCell>Quantity</TableCell>
+                      <TableCell>Total</TableCell>
+                      <TableCell>Actions</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {cartProducts.map((cartProduct) => (
+                      <TableRow key={cartProduct.id}>
+                        <TableCell>
+                          <CardMedia
+                            component="img"
+                            image={cartProduct.product_img}
+                            alt={cartProduct.product_name}
+                            sx={{ width: 100, borderRadius: 1 }}
                           />
-                        </div>
-                      </th>
-                      <td>
-                        <p className="mb-0 mt-4">{cartProduct.product_name}</p>
-                      </td>
-                      <td>
-                        <p className="mb-0 mt-4">{cartProduct.price}</p>
-                      </td>
-                      <td>
-                        <div
-                          className="input-group quantity mt-4"
-                          style={{ width: "100px" }}
-                        >
-                          <div className="input-group-btn">
-                            <button
+                        </TableCell>
+                        <TableCell>{cartProduct.product_name}</TableCell>
+                        <TableCell>${cartProduct.price}</TableCell>
+                        <TableCell>
+                          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            <IconButton
                               onClick={() =>
-                                decreaseQty(
-                                  cartProduct.id,
-                                  cartProduct.quantity
-                                )
+                                decreaseQty(cartProduct.id, cartProduct.quantity)
                               }
-                              className="btn btn-sm btn-minus rounded-circle bg-light border"
                             >
-                              <i className="fa fa-minus"></i>
-                            </button>
-                          </div>
-                          <span className="form-control form-control-sm text-center border-0">
-                            {cartProduct.quantity || 1}
-                          </span>
-                          <div className="input-group-btn">
-                            <button
+                              <RemoveIcon />
+                            </IconButton>
+                            <Typography sx={{ mx: 2 }}>{cartProduct.quantity}</Typography>
+                            <IconButton
                               onClick={() =>
-                                increaseQty(
-                                  cartProduct.id,
-                                  cartProduct.quantity
-                                )
+                                increaseQty(cartProduct.id, cartProduct.quantity)
                               }
-                              className="btn btn-sm btn-plus rounded-circle bg-light border"
                             >
-                              <i className="fa fa-plus"></i>
-                            </button>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <p className="mb-0 mt-4">{cartProduct.totalPrice} $</p>
-                      </td>
-                      <td>
-                        <button
-                          onClick={() => handleRemoveItem(cartProduct.id)}
-                          className="btn btn-md rounded-circle bg-light border mt-4"
-                        >
-                          <i className="fa fa-times text-danger"></i>
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <div className="row g-4 justify-content-end">
-              <div className="col-8"></div>
-              <div className="col-sm-8 col-md-7 col-lg-6 col-xl-4">
-                <div className="bg-light rounded">
-                  <div className="p-4">
-                    <h1 className="display-6 mb-4">
-                      Cart <span className="fw-normal">Total</span>
-                    </h1>
-                    <div className="d-flex justify-content-between mb-4">
-                      <h5 className="mb-0 me-4">Subtotal:</h5>
-                      <p className="mb-0">${totalAmount}</p>
-                    </div>
-                    <div className="d-flex justify-content-between">
-                      <h5 className="mb-0 me-4">Shipping</h5>
-                      <div>
-                        <p className="mb-0">Flat rate: $ {deliverCharge}</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
-                    <h5 className="mb-0 ps-4 me-4">Total</h5>
-                    <p className="mb-0 pe-4">$ {totalAmount + deliverCharge}</p>
-                  </div>
-                  <button
-                    className="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4"
-                    type="button"
+                              <AddIcon />
+                            </IconButton>
+                          </Box>
+                        </TableCell>
+                        <TableCell>${cartProduct.totalPrice}</TableCell>
+                        <TableCell>
+                          <IconButton
+                            onClick={() => handleRemoveItem(cartProduct.id)}
+                            color="error"
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <Box sx={{ p: 3, display: 'flex', flexDirection: 'column', height: '100%' }}>
+                <Typography variant="h5" gutterBottom>
+                  Cart Total
+                </Typography>
+                <Box sx={{ mb: 2 }}>
+                  <Typography variant="body1">Subtotal: ${totalAmount}</Typography>
+                  <Typography variant="body1">Shipping: Flat rate ${deliverCharge}</Typography>
+                </Box>
+                <Box sx={{ mt: 'auto' }}>
+                  <Typography variant="h6">Total: ${totalAmount + deliverCharge}</Typography>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                    sx={{ mt: 2 }}
                   >
                     Proceed Checkout
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+                  </Button>
+                </Box>
+              </Box>
+            </Grid>
+          </Grid>
+        </Box>
       )}
     </>
   );

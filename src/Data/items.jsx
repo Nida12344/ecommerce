@@ -115,28 +115,8 @@ export const slids = [
   },
 ];
 export const features = [
-  {
-    id: 1,
-    icon: <LocalShippingIcon sx={{ fontSize: 40, color: 'white' }} />, // Replaced with MUI icon
-    title: "Free Shipping",
-    descript: "Free on order over $300",
-  },
-  {
-    id: 2,
-    icon: <SecurityIcon sx={{ fontSize: 40, color: 'white' }} />, // Replaced with MUI icon
-    title: "Security Payment",
-    descript: "100% security payment",
-  },
-  {
-    id: 3,
-    icon: <SwapHorizIcon sx={{ fontSize: 40, color: 'white' }} />, // Replaced with MUI icon
-    title: "30 Day Return",
-    descript: "30 day money guarantee",
-  },
-  {
-    id: 4,
-    icon: <PhoneIcon sx={{ fontSize: 40, color: 'white' }} />, // Replaced with MUI icon
-    title: "24/7 Support",
-    descript: "Support every time fast",
-  },
+  { icon: 'LocalShippingIcon', title: 'Fast Shipping', descript: 'Get your products quickly with fast shipping options.' },
+  { icon: 'SupportIcon', title: '24/7 Support', descript: 'Our team is here to help you anytime.' },
+  { icon: 'SecurityIcon', title: 'Secure Payments', descript: 'Your payment information is protected.' },
+  { icon: 'KeyboardReturnIcon', title: 'Easy Returns', descript: 'Return products with ease if you are not satisfied.' }
 ];

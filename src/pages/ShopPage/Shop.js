@@ -1,195 +1,154 @@
-import React, { useState } from "react";
-import { products } from "../../Data/items";
-import { useDispatch } from "react-redux";
-import { addToCart } from "../../stores/cartSlice";
-import { Link, useNavigate } from "react-router-dom";
+import React from 'react';
+import { products } from '../../Data/items';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../../stores/cartSlice';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import {
+  Box,
+  Typography,
+  Button,
+  Grid,
+  Card,
+  CardContent,
+  CardMedia,
+  InputAdornment,
+  TextField,
+  MenuItem,
+  Slider,
+} from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 
 export default function Shop() {
-  const [qty, setQty] = useState(1);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { category } = useParams(); // Get category from URL
+  const filteredProducts = category 
+    ? products.filter(product => product.category === category)
+    : products;
 
   const handleAddToCart = (product) => {
-    let totalPrice = qty * product.price;
+    const totalPrice = product.price; // Assuming quantity is handled elsewhere or is a constant value
     const tempProduct = {
       ...product,
-      qunatity: qty,
+      quantity: 1, // Default quantity value, adjust as needed
       totalPrice,
     };
     dispatch(addToCart(tempProduct));
-    navigate("/cart");
+    navigate('/cart');
   };
 
   return (
     <>
-      <div class="container-fluid page-header py-5">
-        <h1 class="text-center text-white display-6">Shop</h1>
-        <ol class="breadcrumb justify-content-center mb-0">
-          <Link to="/" class="breadcrumb-item">
-            <a href="#">Home</a>
-          </Link>
-          <li class="breadcrumb-item active text-white">Shop</li>
-        </ol>
-      </div>
+      <Box sx={{ py: 5, backgroundColor: 'primary.main', color: 'white' }}>
+        <Typography variant="h3" textAlign="center" gutterBottom>
+          Shop
+        </Typography>
+        <Box sx={{ textAlign: 'center' }}>
+          <Typography variant="h6">
+            <Link to="/" style={{ color: 'white', textDecoration: 'none' }}>
+              Home
+            </Link>{" "}
+            / Shop {category && ` / ${category}`}
+          </Typography>
+        </Box>
+      </Box>
 
-      <div className="container-fluid fruite py-5">
-        <div className="container py-5">
-          <h1 className="mb-4">Fresh fruits shop</h1>
-          <div className="row g-4">
-            <div className="col-lg-12">
-              <div className="row g-4">
-                <div className="col-xl-3">
-                  <div className="input-group w-100 mx-auto d-flex">
-                    <input
-                      type="search"
-                      className="form-control p-3"
-                      placeholder="keywords"
-                      aria-describedby="search-icon-1"
+      <Box sx={{ py: 5 }}>
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={6} md={4} lg={3}>
+            <TextField
+              fullWidth
+              placeholder="Search keywords"
+              variant="outlined"
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              select
+              fullWidth
+              label="Sort By"
+              defaultValue=""
+              sx={{ mb: 2 }}
+            >
+              <MenuItem value="">Default Sorting</MenuItem>
+              <MenuItem value="popularity">Popularity</MenuItem>
+              <MenuItem value="organic">Organic</MenuItem>
+              <MenuItem value="fantastic">Fantastic</MenuItem>
+            </TextField>
+
+            <Box sx={{ mt: 4 }}>
+              <Typography variant="h6" gutterBottom>
+                Categories
+              </Typography>
+              <Box>
+                {/* Replace with dynamic categories if needed */}
+                <Typography variant="body2">Apples (3)</Typography>
+                <Typography variant="body2">Oranges (5)</Typography>
+                <Typography variant="body2">Strawberry (2)</Typography>
+                <Typography variant="body2">Banana (8)</Typography>
+                <Typography variant="body2">Pumpkin (5)</Typography>
+              </Box>
+            </Box>
+
+            <Box sx={{ mt: 4 }}>
+              <Typography variant="h6" gutterBottom>
+                Price
+              </Typography>
+              <Slider
+                min={0}
+                max={500}
+                defaultValue={0}
+                valueLabelDisplay="auto"
+                sx={{ width: '100%' }}
+              />
+            </Box>
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={8} lg={9}>
+            <Grid container spacing={2}>
+              {filteredProducts.map((item, index) => (
+                <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                  <Card sx={{ display: 'flex', flexDirection: 'column', borderRadius: 2, maxWidth: 345 }}>
+                    <CardMedia
+                      component="img"
+                      height="140"
+                      image={item.product_img}
+                      alt={item.product_name}
+                      sx={{ borderRadius: '8px 8px 0 0', objectFit: 'cover' }}
                     />
-                    <span id="search-icon-1" className="input-group-text p-3">
-                      <i className="fa fa-search"></i>
-                    </span>
-                  </div>
-                </div>
-                <div className="col-6"></div>
-                <div className="col-xl-3">
-                  <div className="bg-light ps-3 py-3 rounded d-flex justify-content-between mb-4">
-                    <label for="fruits">Default Sorting:</label>
-                    <select
-                      id="fruits"
-                      name="fruitlist"
-                      className="border-0 form-select-sm bg-light me-3"
-                      form="fruitform"
-                    >
-                      <option value="volvo">Nothing</option>
-                      <option value="saab">Popularity</option>
-                      <option value="opel">Organic</option>
-                      <option value="audi">Fantastic</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <div className="row g-4">
-                <div className="col-lg-3">
-                  <div className="row g-4">
-                    <div className="col-lg-12">
-                      <div className="mb-3">
-                        <h4>Categories</h4>
-                        <ul className="list-unstyled fruite-categorie">
-                          <li>
-                            <div className="d-flex justify-content-between fruite-name">
-                              <a href="#">
-                                <i className="fas fa-apple-alt me-2"></i>Apples
-                              </a>
-                              <span>(3)</span>
-                            </div>
-                          </li>
-                          <li>
-                            <div className="d-flex justify-content-between fruite-name">
-                              <a href="#">
-                                <i className="fas fa-apple-alt me-2"></i>Oranges
-                              </a>
-                              <span>(5)</span>
-                            </div>
-                          </li>
-                          <li>
-                            <div className="d-flex justify-content-between fruite-name">
-                              <a href="#">
-                                <i className="fas fa-apple-alt me-2"></i>
-                                Strawbery
-                              </a>
-                              <span>(2)</span>
-                            </div>
-                          </li>
-                          <li>
-                            <div className="d-flex justify-content-between fruite-name">
-                              <a href="#">
-                                <i className="fas fa-apple-alt me-2"></i>Banana
-                              </a>
-                              <span>(8)</span>
-                            </div>
-                          </li>
-                          <li>
-                            <div className="d-flex justify-content-between fruite-name">
-                              <a href="#">
-                                <i className="fas fa-apple-alt me-2"></i>Pumpkin
-                              </a>
-                              <span>(5)</span>
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                    <div className="col-lg-12">
-                      <div className="mb-3">
-                        <h4 className="mb-2">Price</h4>
-                        <input
-                          type="range"
-                          className="form-range w-100"
-                          id="rangeInput"
-                          name="rangeInput"
-                          min="0"
-                          max="500"
-                          value="0"
-                          oninput="amount.value=rangeInput.value"
-                        />
-                        <output
-                          id="amount"
-                          name="amount"
-                          min-velue="0"
-                          max-value="500"
-                          for="rangeInput"
+                    <CardContent>
+                      <Typography variant="h6" gutterBottom>
+                        {item.product_name}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {item.description}
+                      </Typography>
+                      <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Typography variant="h6">${item.price} / kg</Typography>
+                        <Button
+                          variant="outlined"
+                          color="primary"
+                          onClick={() => handleAddToCart(item)}
+                          startIcon={<AddShoppingCartIcon />}
                         >
-                          0
-                        </output>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-lg-9">
-                  <div className="row g-4 justify-content-center">
-                    {products.map((item, index) => (
-                      <div className="col-md-6 col-lg-6 col-xl-4" key={index}>
-                        <div className="rounded position-relative fruite-item">
-                          <div className="fruite-img">
-                            <img
-                              src={item.product_img}
-                              className="img-fluid w-100 rounded-top"
-                              alt="{item.product_img}"
-                            />
-                          </div>
-                          <div
-                            className="text-white bg-secondary px-3 py-1 rounded position-absolute"
-                            style={{ top: "10px", left: "10px" }}
-                          >
-                            {item.category}
-                          </div>
-                          <div className="p-4 border border-secondary border-top-0 rounded-bottom">
-                            <h4>{item.product_name}</h4>
-                            <p>{item.description}</p>
-                            <div className="d-flex justify-content-between flex-lg-wrap">
-                              <p className="text-dark fs-5 fw-bold mb-0">
-                                ${item.price} / kg
-                              </p>
-                              <a
-                                onClick={() => handleAddToCart(item)}
-                                className="btn border border-secondary rounded-pill px-3 text-primary"
-                              >
-                                <i className="fa fa-shopping-bag me-2 text-primary"></i>{" "}
-                                Add to cart
-                              </a>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+                          Add to Cart
+                        </Button>
+                      </Box>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          </Grid>
+        </Grid>
+      </Box>
     </>
   );
 }

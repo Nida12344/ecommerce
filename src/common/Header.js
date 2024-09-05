@@ -1,30 +1,59 @@
-import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppBar, Toolbar, Typography, IconButton, Badge, Menu, MenuItem, Button, Box } from '@mui/material';
+import { AppBar, Toolbar, Typography, IconButton, Badge, Button, Box, InputBase } from '@mui/material';
 import { Menu as MenuIcon, Search as SearchIcon, Person as PersonIcon, ShoppingBag as ShoppingBagIcon } from '@mui/icons-material';
 import { getCartTotal } from '../stores/cartSlice';
 import TopBar from './TopBar';
 
+import { products } from '../Data/items';
+
 export default function Navbar() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { totalItems } = useSelector((state) => state.cart);
+
+  const [searchQuery, setSearchQuery] = useState('');
+  const [anchorEl, setAnchorEl] = useState(null);
 
   useEffect(() => {
     dispatch(getCartTotal());
   }, [dispatch]);
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
   const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
   const handleMenuClose = () => setAnchorEl(null);
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      const filteredProducts = products.filter(
+        (product) =>
+          product.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          product.product_name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+
+      if (filteredProducts.length > 0) {
+        navigate(`/shop?search=${searchQuery}`, { state: { filteredProducts } });
+      } else {
+        console.log("No products found");
+      }
+    }
+  };
 
   return (
     <>
       <TopBar />
       <AppBar position="fixed" color="default" elevation={0}>
         <Toolbar>
+          <IconButton component={Link} to="/" edge="start" sx={{ mr: 2 }}>
+            <img src="/logo512.png" alt="Logo" style={{ height: 40 }} /> {/* Public URL for logo */}
+          </IconButton>
           <Typography variant="h6" component={Link} to="/" sx={{ flexGrow: 1, color: 'primary.main', textDecoration: 'none' }}>
-            Fruitables
+            Ecommerce
           </Typography>
           <IconButton edge="start" color="inherit" aria-label="menu" onClick={handleMenuOpen} sx={{ display: { xs: 'block', md: 'none' } }}>
             <MenuIcon />
@@ -36,39 +65,31 @@ export default function Navbar() {
             <Button component={Link} to="/shop" sx={{ color: 'text.primary' }}>
               Shop
             </Button>
-            <Button component={Link} to="/shop-details" sx={{ color: 'text.primary' }}>
-              Shop Detail
+            <Button component={Link} to="/About-us" sx={{ color: 'text.primary' }}>
+              About-us
             </Button>
-            <Button
-              aria-controls="category-menu"
-              aria-haspopup="true"
-              onClick={handleMenuOpen}
-              sx={{ color: 'text.primary' }}
-            >
-              Category
-            </Button>
-            <Menu
-              id="category-menu"
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleMenuClose}
-              MenuListProps={{
-                'aria-labelledby': 'category-menu-button',
-              }}
-            >
-              <MenuItem onClick={handleMenuClose} component={Link} to="/category/vegetables">Vegetables</MenuItem>
-              <MenuItem onClick={handleMenuClose} component={Link} to="/category/fruits">Fruit</MenuItem>
-              <MenuItem onClick={handleMenuClose} component={Link} to="/category/bread">Bread</MenuItem>
-              <MenuItem onClick={handleMenuClose} component={Link} to="/category/meat">Meat</MenuItem>
-            </Menu>
             <Button component={Link} to="/contact" sx={{ color: 'text.primary' }}>
               Contact
             </Button>
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <IconButton color="inherit" sx={{ mx: 1 }}>
-              <SearchIcon />
-            </IconButton>
+            <Box component="form" onSubmit={handleSearchSubmit} sx={{ display: 'flex', alignItems: 'center', mx: 1 }}>
+              <InputBase
+                placeholder="Search…"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                sx={{
+                  ml: 1,
+                  flex: 1,
+                  backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                  borderRadius: '4px',
+                  pl: 2,
+                }}
+              />
+              <IconButton type="submit" color="inherit" sx={{ p: 1 }}>
+                <SearchIcon />
+              </IconButton>
+            </Box>
             <IconButton component={Link} to="/cart" color="inherit" sx={{ mx: 1 }}>
               <Badge badgeContent={totalItems} color="secondary">
                 <ShoppingBagIcon />

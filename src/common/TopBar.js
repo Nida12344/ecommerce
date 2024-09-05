@@ -1,28 +1,63 @@
-                
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React from 'react';
+import { Link as RouterLink } from 'react-router-dom';
+import { Box, Typography, Link } from '@mui/material';
+import { LocationOn as LocationOnIcon, Email as EmailIcon } from '@mui/icons-material';
+
 export default function TopBar() {
-    return (
-        <>
-            <div className="container topbar bg-primary d-none d-lg-block">
-                <div className="d-flex justify-content-between">
-                    <div className="top-info ps-2">
-                        <small className="me-3">
-                            <i className="fas fa-map-marker-alt me-2 text-secondary"></i>
-                            <Link  className="text-white">123 Street, New York</Link>
-                        </small>
-                        <small className="me-3">
-                            <i className="fas fa-envelope me-2 text-secondary"></i>
-                            <Link  className="text-white">Email@Example.com</Link>
-                        </small>
-                    </div>
-                    <div className="top-link pe-2">
-                        <Link className="text-white"><small className="text-white mx-2">Privacy Policy</small>/</Link  >
-                        <Link className="text-white"><small className="text-white mx-2">Terms of Use</small>/</Link  >
-                        <Link className="text-white"><small className="text-white ms-2">Sales and Refunds</small></Link  >
-                    </div>
-                </div>
-            </div>
-        </>
-    )
+  return (
+    <Box
+      sx={{
+        display: { xs: 'none', lg: 'block' },
+        backgroundColor: 'primary.main',
+        padding: 1,
+        color: 'white',
+      }}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', mr: 3 }}>
+            <LocationOnIcon sx={{ mr: 1, color: 'secondary.main' }} />
+            <Link component={RouterLink} to="/" color="inherit" underline="none">
+              123 Street, New York
+            </Link>
+          </Typography>
+          <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', mr: 3 }}>
+            <EmailIcon sx={{ mr: 1, color: 'secondary.main' }} />
+            <Link component={RouterLink} to="/" color="inherit" underline="none">
+              Email@Example.com
+            </Link>
+          </Typography>
+        </Box>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Link component={RouterLink} to="/" color="inherit" underline="none">
+            <Typography variant="body2" sx={{ mx: 1 }}>
+              Privacy Policy
+            </Typography>
+          </Link>
+          <Typography variant="body2" sx={{ mx: 1, color: 'white' }}>
+            /
+          </Typography>
+          <Link component={RouterLink} to="/" color="inherit" underline="none">
+            <Typography variant="body2" sx={{ mx: 1 }}>
+              Terms of Use
+            </Typography>
+          </Link>
+          <Typography variant="body2" sx={{ mx: 1, color: 'white' }}>
+            /
+          </Typography>
+          <Link component={RouterLink} to="/" color="inherit" underline="none">
+            <Typography variant="body2" sx={{ mx: 1 }}>
+              Sales and Refunds
+            </Typography>
+          </Link>
+        </Box>
+      </Box>
+    </Box>
+  );
 }

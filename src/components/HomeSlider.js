@@ -1,11 +1,12 @@
-import React from "react";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import { slids } from "../Data/items";
+import React from 'react';
+import Slider from 'react-slick';
+import { Box, Typography, TextField, Button } from '@mui/material';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import { slids } from '../Data/items';
 
 export default function HomeSlide() {
-  var settings = {
+  const settings = {
     dots: false,
     infinite: true,
     speed: 500,
@@ -14,61 +15,78 @@ export default function HomeSlide() {
     autoplay: true,
     autoplaySpeed: 2000,
   };
+
   return (
-    <>
-      <div className="container-fluid py-5 mb-5 hero-header">
-        <div className="container py-5">
-          <div className="row g-5 align-items-center">
-            <div className="col-md-12 col-lg-7">
-              <h4 className="mb-3 text-secondary">100% Organic Foods</h4>
-              <h1 className="mb-5 display-3 text-primary">
-                Organic Veggies & Fruits Foods
-              </h1>
-              <div className="position-relative mx-auto">
-                <input
-                  className="form-control border-2 border-secondary w-75 py-3 px-4 rounded-pill"
-                  type="number"
-                  placeholder="Search"
-                />
-                <button
-                  type="submit"
-                  className="btn btn-primary border-2 border-secondary py-3 px-4 position-absolute rounded-pill text-white h-100"
-                  style={{ top: "0", right: "25%" }}
-                >
-                  Submit Now
-                </button>
-              </div>
-            </div>
-            <div className="col-md-12 col-lg-5">
-              <div
-                id="carouselId"
-                className="carousel slide position-relative"
-                data-bs-ride="carousel"
+    <Box sx={{ py: 5, mb: 5, backgroundColor: 'background.paper', overflow: 'hidden' }}>
+      <Box sx={{ maxWidth: 'lg', mx: 'auto' }}>
+        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', lg: 'row' }, alignItems: 'center', gap: 4 }}>
+          <Box sx={{ flex: 1, maxWidth: { xs: '100%', lg: '50%' } }}>
+            <Typography variant="h4" color="text.secondary" gutterBottom>
+              100% Organic Foods
+            </Typography>
+            <Typography variant="h1" color="primary" gutterBottom>
+              Organic Veggies & Fruits Foods
+            </Typography>
+            <Box sx={{ position: 'relative', mb: 3 }}>
+              <TextField
+                variant="outlined"
+                placeholder="Search"
+                fullWidth
+                sx={{ borderRadius: '50px', pr: '6rem' }}
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                sx={{
+                  position: 'absolute',
+                  top: 0,
+                  right: '10%',
+                  height: '100%',
+                  borderRadius: '50px',
+                  px: 4,
+                }}
               >
-                <div className="carousel-inner" role="listbox">
-                  <Slider {...settings}>
-                    {slids.map((val, index) => (
-                      <div className="carousel-item rounded" key={index}>
-                        <img
-                          src={val.slide_img}
-                          className="img-fluid w-100 h-100 bg-secondary rounded"
-                          alt="First slide"
-                        />
-                        <a
-                          href="#"
-                          className="btn px-4 py-2 text-white rounded"
-                        >
-                          {val.category}
-                        </a>
-                      </div>
-                    ))}
-                  </Slider>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
+                Submit Now
+              </Button>
+            </Box>
+          </Box>
+          <Box sx={{ flex: 1, maxWidth: { xs: '100%', lg: '50%' }, overflow: 'hidden' }}>
+            <Slider {...settings}>
+              {slids.map((val, index) => (
+                <Box
+                  key={index}
+                  sx={{
+                    position: 'relative',
+                    overflow: 'hidden',
+                    borderRadius: 2,
+                    '& img': {
+                      width: '100%',
+                      height: 'auto', // Ensure image maintains aspect ratio
+                      objectFit: 'cover',
+                    },
+                  }}
+                >
+                  <img src={val.slide_img} alt={`Slide ${index + 1}`} style={{ maxHeight: '400px' }} />
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    sx={{
+                      position: 'absolute',
+                      bottom: '10%',
+                      left: '50%',
+                      transform: 'translateX(-50%)',
+                      borderRadius: '20px',
+                      px: 4,
+                    }}
+                  >
+                    {val.category}
+                  </Button>
+                </Box>
+              ))}
+            </Slider>
+          </Box>
+        </Box>
+      </Box>
+    </Box>
   );
 }
