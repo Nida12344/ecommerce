@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Typography, Paper, Grid } from '@mui/material';
-import { features } from '../Data/items'; 
+import { features } from '../Data/Items'; 
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import SupportIcon from '@mui/icons-material/Support';
 import SecurityIcon from '@mui/icons-material/Security';

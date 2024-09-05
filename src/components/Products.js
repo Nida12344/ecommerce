@@ -6,7 +6,7 @@ import { Box, Typography, Button, Grid, Card, CardContent, CardMedia, Tabs, Tab,
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import { products } from '../Data/items';
+import { products } from '../Data/Items';
 import { addToCart } from '../stores/cartSlice';
 
 export default function Products() {

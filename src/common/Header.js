@@ -6,7 +6,7 @@ import { Menu as MenuIcon, Search as SearchIcon, Person as PersonIcon, ShoppingB
 import { getCartTotal } from '../stores/cartSlice';
 import TopBar from './TopBar';
 
-import { products } from '../Data/items';
+import { products } from '../Data/Items';
 
 export default function Navbar() {
   const dispatch = useDispatch();

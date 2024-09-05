@@ -1,5 +1,5 @@
 import React from 'react'
-import { socialIcon } from '../Data/items'
+import { socialIcon } from '../Data/Items'
 
 export default function Footer() {
     return (

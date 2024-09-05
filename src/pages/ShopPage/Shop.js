@@ -1,5 +1,5 @@
 import React from 'react';
-import { products } from '../../Data/items';
+import { products } from '../../Data/Items';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../../stores/cartSlice';
 import { Link, useNavigate, useParams } from 'react-router-dom';

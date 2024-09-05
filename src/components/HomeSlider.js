@@ -3,7 +3,7 @@ import Slider from 'react-slick';
 import { Box, Typography, TextField, Button } from '@mui/material';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { slids } from '../Data/items';
+import { slids } from '../Data/Items';
 
 export default function HomeSlide() {
   const settings = {
